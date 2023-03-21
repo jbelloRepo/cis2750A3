@@ -2,8 +2,8 @@ import molecule
 import math
 
 # Define constants
-radius = {'H': 25, 'C': 40, 'O': 40, 'N': 40}
-element_name = {'H': 'grey', 'C': 'black', 'O': 'red', 'N': 'blue'}
+# radius = {'H': 25, 'C': 40, 'O': 40, 'N': 40}
+# element_name = {'H': 'grey', 'C': 'black', 'O': 'red', 'N': 'blue'}
 header = """<svg version="1.1" width="1000" height="1000" xmlns="http://www.w3.org/2000/svg">"""
 footer = """</svg>"""
 offsetx = 500
@@ -23,7 +23,8 @@ class Atom:  # Create an ATOM class
         cy = self.atom.y * 100.0 + offsety
         r = radius[self.atom.element]
         fill = element_name[self.atom.element]
-        return f"  <circle cx=\"{cx:.2f}\" cy=\"{cy:.2f}\" r=\"{r}\" fill=\"{fill}\"/>\n"
+        return f"  <circle cx=\"{cx:.2f}\" cy=\"{cy:.2f}\" r=\"{r}\" fill=\"url(#{fill})\"/>\n" #! Updated for A2
+        # return f"  <circle cx=\"{cx:.2f}\" cy=\"{cy:.2f}\" r=\"{r}\" fill=\"{fill}\"/>\n"
 
 
 class Bond:
@@ -138,6 +139,7 @@ class Molecule(molecule.molecule):
 
     # @classmethod
 
+    #! UPDATED FOR A3
     def parse(self, fileobj):
         atomCount, bondCount = None, None  # declare as object to make Iterable
         lineCount = 0
@@ -156,7 +158,7 @@ class Molecule(molecule.molecule):
             elif bondCount is not None and self.bond_no < bondCount and (lineCount > (4+atomCount)) and (lineCount < (4+atomCount+1+bondCount)):
                 bondVar = (int(line[:3].strip()), int(
                     line[3:6].strip()), int(line[6:9].strip()))
-                self.append_bond(bondVar[0], bondVar[1], bondVar[2])
+                self.append_bond(bondVar[0]-1, bondVar[1]-1, bondVar[2])
                 # print(bondVar)
         # print("\n=============== Class method: parse() ===============")
         # print(f"atom_no: {self.atom_no}  bond_no: {self.bond_no}")
